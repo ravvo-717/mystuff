@@ -45,6 +45,12 @@ function Hero() {
   return (
     <section className="hero">
       <div className="hero-inner">
+        {site.hero.badge && (
+          <span className="hero-badge">
+            <i aria-hidden />
+            {site.hero.badge}
+          </span>
+        )}
         <h1>
           {site.hero.headline.split('\n').map((line) => {
             const [before, after] = line.split(site.hero.highlight)

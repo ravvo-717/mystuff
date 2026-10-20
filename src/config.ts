@@ -20,6 +20,8 @@ export const site = {
     headline: 'All your stuff\nSafe in your pocket',
     /** The one word in the headline drawn in the brand gradient. */
     highlight: 'pocket',
+    /** Small badge above the headline, with a green dot. Empty string hides it. */
+    badge: 'Beta is live',
     sub: 'A private vault for passwords, notes, cards, IDs and documents. Free, with no ads and no tracking.',
     primary: 'Download for Android',
     secondary: 'Get it on itch.io',
