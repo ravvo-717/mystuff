@@ -1,0 +1,14 @@
+{
+  "name": "MyStuff by Ravvo",
+  "short_name": "MyStuff",
+  "description": "A private vault for passwords, notes, cards, IDs and documents.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#05060b",
+  "theme_color": "#0254fe",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

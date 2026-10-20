@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Set the theme before the first paint, so a reload never flashes white (same rules as useTheme.ts). -->
+    <script>
+      (function () {
+        var t = location.hash.slice(1)
+        if (t !== 'dark' && t !== 'light') {
+          try { t = localStorage.getItem('theme') } catch (e) {}
+        }
+        if (t !== 'dark' && t !== 'light') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        document.documentElement.dataset.theme = t
+      })()
+    </script>
+    <style>
+      html { background: #fbfbfe; }
+      html[data-theme='dark'] { background: #05060b; }
+    </style>
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#fbfbfe" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#05060b" media="(prefers-color-scheme: dark)" />
+    <meta name="application-name" content="MyStuff" />
+    <title>How it works · MyStuff</title>
+    <meta name="description" content="How MyStuff keeps your passwords, notes, cards, IDs and documents safe." />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/learn.tsx"></script>
+  </body>
+</html>

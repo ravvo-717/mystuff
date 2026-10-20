@@ -1,0 +1,191 @@
+/*
+ * MyStuff app screens rebuilt in HTML at real phone size (412 × 915 logical
+ * pixels). Sizes, colours and spacing follow the Flutter source: the app's
+ * text theme is Material 3 scaled by 0.92 (AppTheme.textScale).
+ */
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 500; src: url('../fonts/PlusJakartaSans-Medium.ttf') format('truetype'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 600; src: url('../fonts/PlusJakartaSans-SemiBold.ttf') format('truetype'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 700; src: url('../fonts/PlusJakartaSans-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 800; src: url('../fonts/PlusJakartaSans-ExtraBold.ttf') format('truetype'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 400; src: url('../fonts/PlusJakartaSans-Regular.ttf') format('truetype'); }
+
+/* AppTheme: light "Outline", dark "True Black". */
+:root {
+  --surface: #ffffff;
+  --card: #ffffff;
+  --card-side: 1px solid #e4e4ea;
+  --line: #e4e4ea;
+  --on: #0b0b0f;
+  --muted: #6b6b75;
+  --primary: #2563eb;
+  --raised: #ffffff;
+  --nav-pill: rgba(37, 99, 235, 0.08);
+  --nav-pill-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --tint: 0.1;
+  --art: 0.57;
+}
+:root[data-theme='dark'] {
+  --surface: #000000;
+  --card: #121214;
+  --card-side: 1px solid transparent;
+  --line: #26262b;
+  --on: #f5f5f7;
+  --muted: #8e8e96;
+  --primary: #3b82f6;
+  --raised: #1f1f23;
+  --nav-pill: #1f1f23;
+  --nav-pill-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --tint: 0.14;
+  --art: 0.65;
+}
+
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 412px; height: 915px; overflow: hidden; }
+body {
+  background: var(--surface);
+  color: var(--on);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+svg.ic { width: 24px; height: 24px; fill: currentColor; flex: none; display: block; }
+
+/* ---------- Android system bars ---------- */
+.status { height: 36px; padding: 0 22px; display: flex; align-items: center; justify-content: space-between; font-size: 13.5px; font-weight: 600; }
+.status .sys { display: flex; gap: 5px; align-items: center; }
+.status .sys svg { width: 16px; height: 16px; }
+.gesture { position: absolute; left: 50%; bottom: 8px; translate: -50% 0; width: 108px; height: 4px; border-radius: 4px; background: var(--on); opacity: 0.85; }
+
+/* ---------- App bar (56 high, round 40px buttons) ---------- */
+.appbar { height: 56px; display: flex; align-items: center; padding: 0 20px; gap: 8px; position: relative; }
+.wordmark { font-size: 22px; font-weight: 800; letter-spacing: 0; }
+.wordmark i { font-style: normal; color: var(--primary); }
+.grow { flex: 1; }
+.btn40 {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card);
+  border: var(--card-side);
+  display: grid;
+  place-items: center;
+  color: var(--on);
+  flex: none;
+}
+.btn40 svg.ic { width: 21px; height: 21px; }
+.appbar-title {
+  position: absolute;
+  left: 76px;
+  right: 120px;
+  text-align: center;
+  font-size: 16.56px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Text styles (Material 3 × 0.92) ---------- */
+.title-medium { font-size: 14.72px; line-height: 22px; letter-spacing: 0.14px; }
+.title-small { font-size: 12.88px; line-height: 18.4px; letter-spacing: 0.09px; font-weight: 600; }
+.body-small { font-size: 11.04px; line-height: 14.7px; letter-spacing: 0.37px; color: var(--muted); }
+.label-small { font-size: 10.12px; line-height: 14.7px; letter-spacing: 0.46px; }
+
+/* ---------- Letter avatar ---------- */
+.avatar { display: grid; place-items: center; font-weight: 700; flex: none; }
+
+/* ---------- Unlock (PinEntryView + PinKeypad) ---------- */
+.unlock { position: absolute; top: 36px; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; }
+.unlock .prompt { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 0 24px 44px; text-align: center; }
+.unlock h1 { font-size: 22.08px; line-height: 29.4px; font-weight: 700; }
+.unlock p { margin-top: 10px; font-size: 12.88px; line-height: 18.4px; letter-spacing: 0.23px; color: var(--muted); }
+.dots { margin-top: 36px; height: 24px; display: flex; align-items: center; }
+.dots i { width: 14px; height: 14px; margin: 0 9px; border-radius: 50%; border: 1.6px solid var(--line); }
+.keypad { display: grid; justify-content: center; padding-bottom: 44px; }
+.keyrow { display: flex; padding: 7px 0; }
+.key {
+  width: 72px;
+  height: 72px;
+  margin: 0 12px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 22.08px;
+  font-weight: 600;
+}
+.key.digit { background: var(--card); border: var(--card-side); }
+.key.icon { color: var(--muted); }
+
+/* ---------- Home ---------- */
+.home { padding: 12px 20px 0; }
+.section-head { display: flex; align-items: center; justify-content: space-between; height: 32px; font-weight: 700; }
+.see-all { font-size: 12.88px; font-weight: 500; letter-spacing: 0.09px; color: var(--primary); padding: 0 10px; }
+.bento { margin-top: 12px; display: grid; gap: 10px; }
+.bento-top { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; height: 194px; }
+.bento-col { display: grid; grid-template-rows: 1fr 1fr; gap: 10px; }
+.bento-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; height: 92px; }
+.tile { position: relative; border-radius: 20px; overflow: hidden; }
+.tile.small { background: color-mix(in srgb, var(--c) calc(var(--tint) * 100%), var(--card)); }
+.tile.small::after { content: ''; position: absolute; inset: 0; border-radius: 20px; border: var(--card-side); pointer-events: none; }
+.tile .art { position: absolute; top: 0; right: 0; width: 155px; height: 92px; overflow: visible; }
+.tile .art * { fill: none; stroke: color-mix(in srgb, var(--c) calc(var(--art) * 100%), transparent); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.tile .content { position: absolute; inset: 0; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; }
+.tile .top { display: flex; align-items: center; }
+.tile .dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; background: var(--c); flex: none; }
+.tile .name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile .arrow { width: 18px; height: 18px; color: var(--muted); }
+.tile .count { font-size: 28px; font-weight: 700; letter-spacing: -0.6px; line-height: 1; font-variant-numeric: tabular-nums; }
+.tile.hero { color: #fff; }
+.tile.hero .arrow { color: rgba(255, 255, 255, 0.8); }
+.tile.hero .count { font-size: 56px; font-weight: 800; letter-spacing: -2px; }
+.tile.hero svg.vault { position: absolute; inset: 0; width: 100%; height: 100%; }
+.recent-head { margin-top: 28px; }
+.card { margin-top: 12px; background: var(--card); border: var(--card-side); border-radius: 16px; overflow: hidden; }
+.recent-row { display: flex; align-items: center; padding: 10px 12px; position: relative; }
+.recent-row + .recent-row::before { content: ''; position: absolute; top: 0; left: 66px; right: 0; height: 1px; background: var(--line); }
+.recent-row .text { flex: 1; min-width: 0; margin-left: 14px; display: grid; gap: 2px; }
+.recent-row .when { margin-left: 12px; font-weight: 500; color: var(--muted); }
+
+/* Floating bottom nav (AppBottomNav). */
+.nav {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 26px;
+  height: 66px;
+  padding: 6px;
+  border-radius: 22px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.nav .pill { position: absolute; top: 6px; bottom: 6px; left: 6px; width: calc((100% - 12px) / 4); border-radius: 16px; background: var(--nav-pill); box-shadow: var(--nav-pill-shadow); }
+.nav .tab { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--muted); font-weight: 500; }
+.nav .tab.on { color: var(--primary); font-weight: 600; }
+
+/* ---------- Item page (ItemPageScaffold + FieldTile) ---------- */
+.fields { padding: 4px 20px 0; display: grid; gap: 10px; }
+.item-head { display: flex; align-items: center; padding: 4px 2px 6px; }
+.item-head .text { margin-left: 14px; display: grid; gap: 2px; }
+.item-head b { font-size: 20.24px; line-height: 25.8px; font-weight: 800; }
+.field {
+  border-radius: 14px;
+  background: var(--card);
+  border: var(--card-side);
+  padding: 10px 6px 10px 14px;
+  display: flex;
+  align-items: center;
+  min-height: 60px;
+}
+:root[data-theme='dark'] .field { border: 1.5px solid transparent; }
+.field .text { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.field .label { font-weight: 600; color: var(--muted); }
+.field .value { font-size: 14.72px; line-height: 22px; letter-spacing: 0.46px; font-weight: 600; }
+.field .value.secret { letter-spacing: 2px; }
+.field .value.hint { font-weight: 500; letter-spacing: 0; color: color-mix(in srgb, var(--muted) 60%, transparent); }
+.field .act { width: 40px; height: 40px; display: grid; place-items: center; color: var(--muted); }
+.field .act svg.ic { width: 20px; height: 20px; }
+.field .chev { margin-right: 8px; color: var(--muted); }
+.star-on { color: #f59e0b; }

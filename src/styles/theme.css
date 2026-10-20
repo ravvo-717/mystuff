@@ -1,0 +1,854 @@
+/* The app's own font, served from this site (no Google Fonts requests). */
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 400; font-display: swap; src: url('/fonts/PlusJakartaSans-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 500; font-display: swap; src: url('/fonts/PlusJakartaSans-Medium.ttf') format('truetype'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 600; font-display: swap; src: url('/fonts/PlusJakartaSans-SemiBold.ttf') format('truetype'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 700; font-display: swap; src: url('/fonts/PlusJakartaSans-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-weight: 800; font-display: swap; src: url('/fonts/PlusJakartaSans-ExtraBold.ttf') format('truetype'); }
+
+/* App colours: light is "Outline", dark is "True Black".
+   The Ravvo gradient (purple → blue → teal) is the brand accent. */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #fbfbfe;
+  --card: #ffffff;
+  --raised: #f7f7f9;
+  --line: #e4e4ea;
+  --text: #0b0b0f;
+  --muted: #6b6b75;
+  --accent: #2563eb;
+  --on-accent: #ffffff;
+  --shadow: 0 24px 60px -28px rgba(16, 24, 40, 0.35);
+  --header: rgba(251, 251, 254, 0.82);
+  /* Aurora: purple, blue and teal light from the top of every page. */
+  --aurora-1: rgba(138, 92, 255, 0.18);
+  --aurora-2: rgba(63, 123, 255, 0.18);
+  --aurora-3: rgba(34, 195, 201, 0.16);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #05060b;
+  --card: #121214;
+  --raised: #1a1a1e;
+  --line: #26262b;
+  --text: #f5f5f7;
+  --muted: #8e8e96;
+  --accent: #3b82f6;
+  --on-accent: #ffffff;
+  --shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.9);
+  --header: rgba(5, 6, 11, 0.72);
+  --aurora-1: rgba(138, 92, 255, 0.38);
+  --aurora-2: rgba(63, 123, 255, 0.4);
+  --aurora-3: rgba(34, 195, 201, 0.26);
+}
+
+:root[data-theme='dark'] .only-light { display: none; }
+:root:not([data-theme='dark']) .only-dark { display: none; }
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  position: relative;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  line-height: 1.55;
+}
+/* The Aurora background: soft light from the top that fades into the page. */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 900px;
+  background:
+    radial-gradient(40% 50% at 15% 10%, var(--aurora-1), transparent 70%),
+    radial-gradient(45% 55% at 70% 0%, var(--aurora-2), transparent 70%),
+    radial-gradient(40% 50% at 95% 70%, var(--aurora-3), transparent 70%);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  pointer-events: none;
+  z-index: -1;
+}
+
+img { max-width: 100%; }
+a { color: var(--accent); }
+.grow { flex: 1; }
+
+/* ---------- Header & footer ---------- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Lines up with the 1020 px content column of every section (and ignores the scrollbar). */
+  padding: 13px max(20px, calc(50% - 510px));
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.header.scrolled {
+  background: var(--header);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom-color: var(--line);
+}
+.header-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+.header-logo img { display: block; }
+.logo-byline { display: flex; align-items: center; gap: 9px; }
+.logo-by { font-size: 10px; font-weight: 600; letter-spacing: 0.04em; color: var(--muted); }
+/* The menu sheet stays solid while open, so it never mixes with the page. */
+.header.open { background: var(--bg); border-bottom-color: var(--line); backdrop-filter: none; -webkit-backdrop-filter: none; }
+/* Header icon buttons (theme switch, phone menu): a bare line icon with a
+   full 44px tap area and a soft highlight on hover. */
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.icon-btn:hover { background: color-mix(in srgb, var(--text) 8%, transparent); }
+.icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.footer { border-top: 1px solid var(--line); margin-top: 72px; }
+.footer-inner {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 26px 20px 34px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+.footer nav { display: flex; flex-wrap: wrap; gap: 18px; }
+.footer a { color: var(--muted); text-decoration: none; }
+.footer a:hover { color: var(--accent); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 22px;
+  height: 50px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn.primary {
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--accent) 65%, transparent);
+}
+.btn.primary:hover { transform: translateY(-2px); }
+.btn.ghost { border-color: var(--line); color: var(--text); background: var(--card); }
+.btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn.small { height: 38px; padding: 0 14px; font-size: 13.5px; border-radius: 11px; background: var(--accent); color: var(--on-accent); }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Reveal on scroll */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.reveal.shown { opacity: 1; transform: none; }
+
+.section { max-width: 1060px; margin: 0 auto; padding: 84px 20px 0; }
+.section h1,
+.section h2 {
+  margin: 0 0 30px;
+  text-align: center;
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* ---------- Hero ---------- */
+.hero { position: relative; overflow: hidden; }
+/* Melts the phones into the page, so the hero has no hard edge. */
+.hero::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 260px;
+  background: linear-gradient(to bottom, transparent, var(--bg) 85%);
+  pointer-events: none;
+  z-index: 3;
+}
+.hero-inner {
+  position: relative;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 60px 20px 0;
+  text-align: center;
+}
+.hero-inner h1 {
+  margin: 0 0 16px;
+  font-size: clamp(34px, 5.4vw, 54px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -1.2px;
+}
+.hero-inner h1 span { display: block; }
+.hero-inner h1 span + span {
+  background: linear-gradient(100deg, #8a5cff, #3f7bff 55%, #22c3c9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Room for descenders (y, p): the clipped gradient stops at the line box. */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.hero-sub { margin: 0 auto 26px; color: var(--muted); font-size: 17px; max-width: 46ch; }
+.hero-inner .actions { justify-content: center; }
+.hero-note { display: block; margin-top: 14px; color: var(--muted); font-size: 13px; }
+.hero-note a { color: var(--accent); font-weight: 700; text-decoration: none; }
+.hero-note a:hover { text-decoration: underline; }
+
+/* Three screenshots rising out of the hero's lower edge. */
+.trio {
+  position: relative;
+  margin-top: 48px;
+  height: 520px;
+  -webkit-mask-image: linear-gradient(#000 64%, transparent);
+  mask-image: linear-gradient(#000 64%, transparent);
+}
+.trio .phone { position: absolute; left: 50%; width: 252px; }
+.trio .t-mid { width: 280px; top: 0; translate: -50% 0; z-index: 2; }
+.trio .t-left { top: 44px; translate: calc(-50% - 238px) 0; rotate: -6deg; opacity: 0.85; }
+.trio .t-right { top: 44px; translate: calc(-50% + 238px) 0; rotate: 6deg; opacity: 0.85; }
+@media (max-width: 880px) {
+  .trio .t-left, .trio .t-right { display: none; }
+  .trio { height: 480px; }
+}
+
+/* ---------- Learn page ---------- */
+
+/* "Private by design": where your data goes */
+.journey-section { position: relative; }
+/* The first section on the Learn page sits closer to the header. */
+.learn-first { padding-top: 48px; }
+.section :is(h1, h2) + .journey-sub { margin-top: -22px; }
+.journey-sub { margin: 0 auto 22px; text-align: center; color: var(--muted); max-width: 52ch; }
+.journey { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.jstep {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 18px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 20px;
+}
+.jstep h3 { margin: 0; font-size: 17px; font-weight: 800; }
+.jstep p { margin: 0; color: var(--muted); font-size: 13.5px; }
+.jtag { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.jlocked {
+  background: linear-gradient(160deg, color-mix(in srgb, #3f7bff 18%, var(--card)), var(--card));
+  border-color: color-mix(in srgb, #3f7bff 35%, var(--line));
+}
+.jlockline { display: flex; align-items: center; gap: 10px; }
+.jpad { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--accent); color: var(--on-accent); flex: none; }
+.jplain, .jcipher, .jdrive { border: 1px solid var(--line); background: var(--raised); border-radius: 12px; padding: 10px 12px; }
+.jplain { display: grid; gap: 2px; font-size: 13.5px; font-weight: 600; }
+.jplain small { color: var(--muted); font-size: 11px; font-weight: 600; }
+.jcipher {
+  display: block;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  word-break: break-all;
+  border-style: dashed;
+}
+.jcipher i { font-style: normal; color: var(--accent); }
+.jdrive { display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600; }
+.jdrive svg { flex: none; color: var(--accent); }
+.jdrive small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 500; }
+.jnone {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px dashed color-mix(in srgb, #ef4444 55%, var(--line));
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.jnone svg { flex: none; color: #ef4444; }
+.jmore { margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.jmore .safety-line { align-items: flex-start; font-size: 14px; }
+@media (max-width: 820px) {
+  .journey, .jmore { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- Safety band ---------- */
+.safety-lines { max-width: 640px; margin: 0 auto; display: grid; gap: 10px; }
+.safety-line {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.safety-line svg { flex: none; color: var(--accent); }
+.safety-line strong { color: var(--text); }
+
+/* ---------- Get it (the app's "Get started" card) ---------- */
+.getit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 64px; align-items: center; }
+.eyebrow { display: inline-block; margin-bottom: 12px; color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.getit .getit-copy h2 { margin: 0 0 10px; text-align: left; font-size: clamp(30px, 4.4vw, 40px); letter-spacing: -0.8px; line-height: 1.1; }
+.getit-copy h2 span { display: block; }
+.getit-sub { margin: 0 0 28px; color: var(--muted); font-size: 16px; }
+.getit-meta { display: block; margin-top: 14px; color: var(--muted); font-size: 13px; }
+
+/* The right margin keeps the stacked card behind inside the content column. */
+.gs { position: relative; margin-right: 14px; }
+/* A second card peeking out behind, like a stack. */
+.gs::before { content: ''; position: absolute; inset: 18px -14px -14px 18px; border-radius: 28px; border: 1px solid var(--line); background: var(--raised); }
+.gs-card { position: relative; padding: 26px; border: 1px solid var(--line); border-radius: 28px; background: var(--card); box-shadow: var(--shadow); }
+.gs-head { display: flex; align-items: center; gap: 14px; }
+.gs-head img { border-radius: 24%; flex: none; }
+.gs-head b { display: block; font-size: 19px; }
+.gs-head small { color: var(--muted); font-size: 13px; }
+.gs-count { margin-left: auto; padding: 6px 11px; border-radius: 999px; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); font-size: 13px; font-weight: 800; white-space: nowrap; }
+.gs-progress { height: 6px; margin: 20px 0 8px; border-radius: 3px; background: var(--raised); overflow: hidden; }
+.gs-progress i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #8a5cff, #3f7bff, #22c3c9); }
+.gs-task { display: flex; align-items: center; gap: 14px; padding: 16px 4px; border-bottom: 1px solid var(--line); }
+.gs-task:last-child { padding-bottom: 4px; border-bottom: 0; }
+.gs-ring { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line); }
+.gs-text { flex: 1; min-width: 0; }
+.gs-text b { display: block; font-size: 15.5px; }
+.gs-text small { color: var(--muted); font-size: 13px; }
+.gs-task.done .gs-ring { border-color: #10b981; background: #10b981; color: #fff; }
+.gs-task.done .gs-text b { color: var(--muted); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--muted) 60%, transparent); }
+@media (max-width: 860px) {
+  .getit { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+  .gs { margin-right: 14px; }
+}
+@media (max-width: 480px) {
+  .gs-card { padding: 20px; }
+}
+
+.getit-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 28px 0 36px; }
+.getit-actions .actions { justify-content: center; }
+
+/* ---------- FAQ ---------- */
+.faq-list { max-width: 640px; margin: 0 auto; display: grid; gap: 10px; }
+.faq-list details { border: 1px solid var(--line); background: var(--card); border-radius: 16px; padding: 0 20px; }
+.faq-list summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 0;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  list-style: none;
+}
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary svg { flex: none; color: var(--muted); rotate: 90deg; transition: rotate 0.2s ease; }
+.faq-list details[open] summary svg { rotate: -90deg; }
+.faq-list details p { margin: 0 0 16px; color: var(--muted); font-size: 14.5px; }
+
+/* ---------- Phone frame around a rebuilt app screen ---------- */
+.phone {
+  aspect-ratio: 412 / 915;
+  border-radius: 38px;
+  border: 7px solid #1a1c21;
+  box-shadow: 0 0 0 1px #2c2f36, var(--shadow);
+  background: var(--bg);
+  overflow: hidden;
+  box-sizing: content-box;
+}
+.phone iframe { display: block; border: 0; transform-origin: top left; pointer-events: none; }
+
+/* ---------- App Home screen (AppHomePhone.tsx) ----------
+   Sizes are the app's dp values; text uses the app's 0.92 text scale
+   (titleMedium 14.72, titleSmall 12.88, bodySmall 11.04, labelSmall 10.12). */
+:root,
+:root[data-theme='light'] {
+  --ah-card: #ffffff;
+  --ah-raised: #ffffff;
+  --ah-line: #e4e4ea;
+  --ah-side: 0 0 0 1px #e4e4ea;
+  --ah-tint: 10%;
+  --ah-art: 0.57;
+  --ah-pill: rgba(37, 99, 235, 0.08);
+  --ah-pill-shadow: rgba(0, 0, 0, 0.08);
+}
+:root[data-theme='dark'] {
+  --ah-card: #121214;
+  --ah-raised: #1f1f23;
+  --ah-line: #26262b;
+  --ah-side: 0 0 0 0 transparent;
+  --ah-tint: 14%;
+  --ah-art: 0.65;
+  --ah-pill: #1f1f23;
+  --ah-pill-shadow: rgba(0, 0, 0, 0.35);
+}
+.ah-device {
+  padding: 8px;
+  border-radius: 34px;
+  background: #0b0c0f;
+  box-shadow: 0 0 0 1px #2c2f36, var(--shadow);
+  flex: none;
+}
+.ah-clip { position: relative; overflow: hidden; background: var(--bg); }
+/* Only the top of the phone: the frame and screen fade into the page. */
+.ah-faded {
+  padding-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-mask-image: linear-gradient(#000 62%, transparent 98%);
+  mask-image: linear-gradient(#000 62%, transparent 98%);
+}
+.ah-faded .ah-clip { border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important; }
+.ah-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  line-height: 1.4;
+  text-align: left;
+}
+.ah-grow { flex: 1; }
+.ah-status { height: 32px; padding: 0 22px; display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-weight: 600; }
+.ah-status-icons { display: flex; align-items: center; gap: 6px; }
+.ah-appbar { height: 56px; display: flex; align-items: center; padding: 0 16px 0 20px; }
+.ah-wordmark { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1; }
+.ah-wordmark i { font-style: normal; color: var(--accent); }
+.ah-barbtn {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  color: var(--text);
+}
+.ah-barbtn svg {
+  box-sizing: content-box;
+  padding: 9.5px;
+  border-radius: 50%;
+  background: var(--ah-card);
+  box-shadow: var(--ah-side);
+}
+.ah-body { padding: 12px 20px 0; }
+.ah-section { font-size: 14.72px; font-weight: 700; line-height: 1.5; margin-bottom: 12px; }
+.ah-with-action { height: 32px; display: flex; align-items: center; justify-content: space-between; margin-top: 28px; }
+.ah-seeall { font-size: 12.88px; font-weight: 500; color: var(--accent); padding: 0 10px; }
+
+/* CategoryBento: 92 dp tiles, 10 dp gaps, 20 dp corners */
+.ah-bento { height: 194px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ah-stack { display: grid; grid-template-rows: 1fr 1fr; gap: 10px; }
+.ah-row2 { height: 92px; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ah-tile { position: relative; overflow: hidden; border-radius: 20px; }
+.ah-small { background: color-mix(in srgb, var(--ah-type) var(--ah-tint), var(--ah-card)); }
+.ah-small::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset var(--ah-side); pointer-events: none; }
+.ah-fill { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ah-art { position: absolute; top: 0; right: 0; height: 100%; width: auto; aspect-ratio: 155 / 92; }
+.ah-art-ink { opacity: var(--ah-art); }
+.ah-tile-content { position: relative; height: 100%; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; }
+.ah-tile-top { display: flex; align-items: center; }
+.ah-dot { width: 8px; height: 8px; margin-right: 7px; border-radius: 50%; background: var(--ah-type); flex: none; }
+.ah-tile-label { flex: 1; min-width: 0; font-size: 12.88px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ah-arrow { color: var(--muted); flex: none; }
+.ah-hero .ah-tile-label { color: #fff; }
+.ah-hero .ah-arrow { color: rgba(255, 255, 255, 0.8); }
+.ah-count { font-size: 28px; font-weight: 700; letter-spacing: -0.6px; line-height: 1; font-variant-numeric: tabular-nums; }
+.ah-count-hero { font-size: 56px; font-weight: 800; letter-spacing: -2px; color: #fff; }
+
+/* RecentItemsCard */
+.ah-recent { border-radius: 16px; overflow: hidden; background: var(--ah-card); box-shadow: var(--ah-side); }
+.ah-recent-row { display: flex; align-items: center; padding: 10px 12px; }
+.ah-avatar { width: 40px; height: 40px; border-radius: 11.2px; display: grid; place-items: center; font-size: 16.8px; font-weight: 700; flex: none; }
+.ah-recent-text { flex: 1; min-width: 0; margin-left: 14px; display: grid; gap: 2px; }
+.ah-recent-text b { font-size: 12.88px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ah-recent-text small { font-size: 11.04px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ah-time { margin-left: 12px; font-size: 10.12px; font-weight: 500; color: var(--muted); }
+.ah-divider { height: 1px; margin-left: 66px; background: var(--ah-line); }
+
+/* AppBottomNav: floating, 66 dp tall, 22 dp corners, sliding pill */
+.ah-nav {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 34px;
+  height: 66px;
+  padding: 6px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-radius: 22px;
+  border: 1px solid var(--ah-line);
+  background: var(--ah-card);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+.ah-nav-pill { position: absolute; top: 6px; bottom: 6px; left: 6px; width: calc((100% - 12px) / 4); border-radius: 16px; background: var(--ah-pill); box-shadow: 0 2px 8px var(--ah-pill-shadow); }
+.ah-nav-item { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--muted); }
+.ah-nav-item span { font-size: 10.12px; font-weight: 500; line-height: 1.2; }
+.ah-nav-item.on { color: var(--accent); }
+.ah-nav-item.on span { font-weight: 600; }
+.ah-gesture { position: absolute; left: 50%; bottom: 10px; width: 108px; height: 4px; translate: -50% 0; border-radius: 2px; background: var(--text); opacity: 0.35; }
+
+/* "What you can keep": the Home screen with the six kinds around it */
+.keep-tour { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 26px; align-items: center; }
+.keep-side { display: grid; gap: 14px; }
+.keep-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 18px;
+}
+.keep-label b { display: block; font-size: 15px; font-weight: 700; }
+.keep-label small { display: block; color: var(--muted); font-size: 13px; line-height: 1.45; }
+.keep-left .keep-label { flex-direction: row-reverse; text-align: right; }
+.keep-label::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 26px;
+  height: 1.5px;
+  background: repeating-linear-gradient(90deg, var(--muted) 0 4px, transparent 4px 8px);
+  opacity: 0.6;
+}
+.keep-left .keep-label::after { right: -27px; }
+.keep-right .keep-label::after { left: -27px; }
+.keep-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--kc);
+  background: color-mix(in srgb, var(--kc) 16%, var(--raised));
+}
+@media (max-width: 900px) {
+  .keep-tour { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .keep-phone { order: -1; }
+  .keep-side { width: 100%; max-width: 460px; }
+  .keep-left .keep-label { flex-direction: row; text-align: left; }
+  .keep-label::after { display: none; }
+}
+
+/* "Questions": the three big answers, then the rest as small rows */
+.big3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.big3-card {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 20px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 22px;
+}
+.big3-first {
+  background: linear-gradient(160deg, color-mix(in srgb, #3f7bff 20%, var(--card)), var(--card));
+  border-color: color-mix(in srgb, #3f7bff 35%, var(--line));
+}
+.big3-answer { font-size: 30px; font-weight: 800; letter-spacing: -0.8px; line-height: 1; }
+.big3-card p { margin: 0; color: var(--muted); font-size: 14px; }
+.big3-more { margin-top: 14px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.big3-small { display: grid; gap: 8px; align-content: start; padding: 16px; border: 1px solid var(--line); background: var(--card); border-radius: 18px; }
+.big3-small h3 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 14.5px; font-weight: 700; }
+.big3-small p { margin: 0; color: var(--muted); font-size: 13.5px; }
+.big3-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--raised));
+}
+@media (max-width: 820px) {
+  .big3, .big3-more { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- Privacy page ---------- */
+.policy { max-width: 1060px; margin: 0 auto; padding: 56px 20px 0; }
+.policy-head { max-width: 680px; margin-bottom: 52px; }
+.policy-head h1 { margin: 0 0 10px; font-size: clamp(32px, 5vw, 46px); font-weight: 800; letter-spacing: -1px; line-height: 1.08; }
+.policy-sub { margin: 0 0 14px; color: var(--muted); font-size: 16.5px; }
+.policy-updated { color: var(--muted); font-size: 13.5px; }
+
+.policy-body { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 56px; align-items: start; }
+.policy-toc { position: sticky; top: 96px; display: grid; gap: 2px; }
+.policy-toc small { margin-bottom: 8px; color: var(--muted); font-size: 11.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.policy-toc a { padding: 7px 12px; border-left: 2px solid var(--line); color: var(--muted); font-size: 14px; font-weight: 600; text-decoration: none; transition: color 0.15s ease, border-color 0.15s ease; }
+.policy-toc a:hover { color: var(--text); }
+.policy-toc a.on { color: var(--text); border-left-color: var(--accent); }
+
+.policy-section { max-width: 720px; padding: 28px 0; border-top: 1px solid var(--line); scroll-margin-top: 88px; }
+.policy-section:first-child { padding-top: 0; border-top: 0; }
+.policy-section h2 { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; font-size: 19px; font-weight: 800; }
+.policy-no { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); font-size: 12px; font-weight: 800; }
+.policy-section p { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
+.policy-section ul { display: grid; gap: 8px; margin: 4px 0 10px; padding: 0; list-style: none; }
+.policy-section li { position: relative; padding-left: 22px; color: var(--muted); font-size: 15px; }
+.policy-section li::before { content: ''; position: absolute; left: 5px; top: 0.68em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.policy-section a { font-weight: 600; text-decoration: none; }
+.policy-section a:hover { text-decoration: underline; }
+.policy-section blockquote { margin: 4px 0 12px; padding: 14px 18px; border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; background: var(--raised); font-size: 14.5px; }
+@media (max-width: 860px) {
+  .policy-body { grid-template-columns: minmax(0, 1fr); }
+  .policy-toc { display: none; }
+}
+
+/* ==========================================================
+   Phones (640 px and narrower). Desktop is unchanged.
+   Type follows Material 3, the scale the Android app uses:
+   headline small 24, title 20, body medium 14, body small 12.
+   ========================================================== */
+:root { --mobile-h1: 24px; --mobile-h2: 20px; --mobile-body: 14px; --mobile-small: 12px; }
+
+@media (min-width: 641px) {
+  .phone-only { display: none !important; }
+}
+.phone-menu, .menu-shade, .jno { display: none; }
+
+@media (max-width: 640px) {
+  .desktop-only { display: none !important; }
+
+  /* Header: MyStuff large, "by RAVVO" small, and a menu button. */
+  .header { height: 68px; padding: 0 16px 0 20px; }
+  .header-logo { gap: 7px; }
+  .logo-ms { height: 24px; width: auto; }
+  .logo-byline { gap: 4px; margin-top: 7px; }
+  .logo-by { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .logo-rv { height: 9px; width: auto; }
+  /* Pull the bare icon out so its lines line up with the page edge. */
+  .menu-btn { margin-right: -6px; }
+
+  .phone-menu {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 6px 16px 18px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 30px 50px -30px rgba(0, 0, 0, 0.6);
+    animation: menu-in 0.2s ease;
+  }
+  .phone-menu[hidden] { display: none; }
+  .phone-menu nav { display: grid; }
+  .phone-menu nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 4px;
+    border-bottom: 1px solid var(--line);
+    color: var(--text);
+    font-size: var(--mobile-body);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .phone-menu nav a svg { flex: none; color: var(--muted); }
+  .phone-menu nav a svg:last-child { margin-left: auto; }
+  .phone-menu nav a.here, .phone-menu nav a.here svg { color: var(--accent); }
+  .menu-theme { display: flex; align-items: center; gap: 12px; padding: 13px 4px; font-size: var(--mobile-body); font-weight: 600; }
+  .menu-theme svg { flex: none; color: var(--muted); }
+  .seg { display: inline-flex; margin-left: auto; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); }
+  .seg button { padding: 5px 12px; border: 0; border-radius: 999px; background: none; color: var(--muted); font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .seg button.on { background: var(--text); color: var(--bg); }
+  .menu-download { width: 100%; margin-top: 4px; }
+  .menu-shade { display: block; position: fixed; inset: 68px 0 0; z-index: 40; background: rgba(0, 0, 0, 0.45); animation: shade-in 0.2s ease; }
+  .phone-menu a:focus-visible, .phone-menu button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Buttons: 46 px, full width. */
+  .btn { height: 46px; padding: 0 14px; gap: 8px; border-radius: 13px; font-size: 14px; white-space: nowrap; }
+  .actions { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; width: 100%; }
+  .actions-row { grid-template-columns: 1.15fr 1fr; }
+
+  /* Sections */
+  .section { padding: 52px 20px 0; }
+  .section h1, .section h2 { margin: 0 0 8px; font-size: var(--mobile-h2); line-height: 1.25; letter-spacing: -0.4px; text-wrap: balance; }
+  .section h1 { font-size: var(--mobile-h1); }
+  .section :is(h1, h2) + .journey-sub { margin-top: 0; }
+  .journey-sub { margin: 0 auto 20px; max-width: 34ch; font-size: var(--mobile-body); }
+  .eyebrow { margin-bottom: 6px; font-size: 10.5px; letter-spacing: 0.1em; }
+  .jtag { font-size: 10.5px; }
+
+  /* Hero: headline, one fading phone, then the buttons on its faded edge. */
+  .hero::after { display: none; }
+  .hero-inner { display: flex; flex-direction: column; padding: 30px 20px 0; }
+  .hero-inner h1 { margin: 0 0 8px; font-size: var(--mobile-h1); line-height: 1.3; letter-spacing: -0.4px; }
+  .hero-sub { margin: 0 auto 20px; max-width: 34ch; font-size: var(--mobile-body); }
+  .trio { order: 1; margin-top: 4px; height: 387px; -webkit-mask-image: linear-gradient(#000 58%, transparent 97%); mask-image: linear-gradient(#000 58%, transparent 97%); }
+  .trio .t-mid { width: 248px; }
+  .hero-inner .actions { order: 2; position: relative; z-index: 4; margin-top: -54px; }
+  .hero-note { order: 3; margin-top: 12px; font-size: var(--mobile-small); }
+  .hero-note a { font-weight: 600; }
+
+  /* Get it: centred, with the card between the copy and the button. */
+  .getit { gap: 0; text-align: center; }
+  .getit-copy { display: contents; }
+  .getit .eyebrow { display: block; }
+  .getit .getit-copy h2 { margin: 0 0 8px; text-align: center; font-size: var(--mobile-h2); line-height: 1.2; letter-spacing: -0.4px; }
+  .getit-copy h2 span { display: inline; }
+  .getit-copy h2 span + span::before { content: ' '; }
+  .getit-sub { margin: 0 auto 20px; max-width: 34ch; font-size: var(--mobile-body); }
+  .gs { order: 1; margin-right: 0; text-align: left; }
+  .gs::before { display: none; }
+  .gs-card { padding: 16px; border-radius: 20px; box-shadow: none; }
+  .gs-head { gap: 12px; }
+  .gs-head img { width: 42px; height: 42px; }
+  .gs-head b { font-size: 14px; }
+  .gs-head small, .gs-count { font-size: var(--mobile-small); }
+  .gs-count { padding: 3px 9px; }
+  .gs-progress { height: 5px; margin: 14px 0 4px; }
+  .gs-task { gap: 12px; padding: 11px 0; }
+  .gs-task:last-child { padding-bottom: 0; }
+  .gs-ring { width: 24px; height: 24px; }
+  .gs-text b { font-size: 13.5px; }
+  .gs-text small { font-size: var(--mobile-small); }
+  .getit .actions { order: 2; margin-top: 16px; }
+  .getit .btn.ghost { display: none; }
+  .getit-meta { order: 3; margin-top: 12px; font-size: var(--mobile-small); }
+
+  /* Footer: centred, co-brand on top, links in a 2 × 2 grid. */
+  .footer { margin-top: 56px; }
+  .footer-inner { display: grid; justify-content: stretch; justify-items: center; gap: 18px; padding: 30px 20px 28px; text-align: center; }
+  .footer-cobrand { height: 26px; width: auto; }
+  .footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 20px; }
+  .footer nav a { font-size: 13px; font-weight: 600; }
+  .footer-copy { order: 1; width: 100%; padding-top: 18px; border-top: 1px solid var(--line); font-size: var(--mobile-small); }
+
+  /* Learn: the phone, then the six kinds as one list. */
+  .learn-first { padding-top: 30px; }
+  .keep-tour { gap: 0; }
+  .keep-phone { margin-bottom: 18px; }
+  .klist { border: 1px solid var(--line); border-radius: 20px; background: var(--card); overflow: hidden; }
+  .kl-row { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 0 14px; padding: 12px 14px; }
+  .kl-row + .kl-row { border-top: 1px solid var(--line); }
+  .kl-row b { display: block; font-size: var(--mobile-body); font-weight: 700; }
+  .kl-row small { display: block; color: var(--muted); font-size: var(--mobile-small); line-height: 1.45; }
+  .kl-row i { width: 8px; height: 8px; border-radius: 50%; background: var(--kc); }
+
+  /* Learn: Private by design as a numbered timeline. */
+  .journey { position: relative; gap: 14px; }
+  .journey::before { content: ''; position: absolute; left: 15px; top: 18px; bottom: 18px; width: 2px; background: linear-gradient(#8a5cff, #3f7bff, #22c3c9); opacity: 0.5; }
+  .jstep { position: relative; margin-left: 44px; gap: 8px; padding: 14px; border-radius: 16px; }
+  .jno {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: -1px;
+    left: -45px;
+    z-index: 1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--card);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .jlocked .jno { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .jstep h3 { font-size: 14px; }
+  .jstep p { font-size: 12.5px; }
+  .jpad { display: none; }
+  .jplain, .jcipher, .jdrive { padding: 8px 10px; border-radius: 10px; }
+  .jplain, .jdrive { font-size: 12.5px; }
+  .jplain small { font-size: 10.5px; }
+  .jcipher { font-size: 10.5px; line-height: 1.55; }
+  .jdrive small { font-size: 11px; }
+  .jnone { padding: 0; border: 0; gap: 8px; font-size: 12.5px; }
+  .jmore { margin-top: 14px; gap: 8px; }
+  .jmore .safety-line { align-items: center; gap: 10px; padding: 11px 13px; border-radius: 14px; font-size: 13px; font-weight: 600; }
+  .safety-line svg { width: 18px; height: 18px; }
+
+  /* Learn: questions. The big three as cards, the rest as one list. */
+  .big3 { gap: 10px; }
+  .big3-card { gap: 6px; padding: 16px; border-radius: 18px; }
+  .big3-answer { font-size: 20px; letter-spacing: -0.5px; line-height: 1.1; }
+  .big3-card p { font-size: 13px; }
+  .big3-more { gap: 0; margin-top: 10px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); overflow: hidden; }
+  .big3-small { grid-template-columns: 32px minmax(0, 1fr); gap: 3px 12px; padding: 13px 14px; border: 0; border-radius: 0; }
+  .big3-small + .big3-small { border-top: 1px solid var(--line); }
+  .big3-small h3 { display: contents; font-size: 13.5px; }
+  .big3-icon { grid-row: span 2; width: 32px; height: 32px; }
+  .big3-icon svg { width: 17px; height: 17px; }
+  .big3-small p { font-size: 12.5px; line-height: 1.45; }
+  .getit-actions { display: grid; margin: 18px 0 0; }
+
+  /* Privacy policy */
+  .policy { padding: 30px 20px 0; }
+  .policy-head { margin: 0 auto 28px; text-align: center; }
+  .policy-head h1 { margin: 0 0 8px; font-size: var(--mobile-h1); line-height: 1.25; letter-spacing: -0.4px; }
+  .policy-sub { margin: 0 auto 10px; max-width: 34ch; font-size: var(--mobile-body); }
+  .policy-updated { font-size: var(--mobile-small); }
+  .policy-section { padding: 22px 0; scroll-margin-top: 72px; }
+  .policy-section h2 { gap: 10px; margin: 0 0 8px; font-size: 16px; line-height: 1.3; }
+  .policy-no { width: 24px; height: 24px; font-size: 11px; }
+  .policy-section p, .policy-section li { font-size: var(--mobile-body); }
+  .policy-section li { padding-left: 20px; }
+  .policy-section li::before { left: 4px; }
+  .policy-section blockquote { padding: 12px 14px; font-size: 13px; }
+}
+
+@keyframes menu-in { from { opacity: 0; transform: translateY(-8px); } }
+@keyframes shade-in { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { transition: none; }
+  .phone-menu, .menu-shade { animation: none; }
+}
+
+/* ---------- Scrollbar ----------
+   A slim rounded thumb that turns into the Ravvo gradient on hover.
+   Chrome, Edge and Safari use the ::-webkit-scrollbar rules; Firefox only
+   understands the standard properties, so it gets those instead (setting
+   them everywhere would make Chrome ignore the custom look). */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 20%, transparent) padding-box;
+}
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active {
+  border-width: 2px;
+  background: linear-gradient(180deg, #8a5cff, #3f7bff 55%, #22c3c9) padding-box;
+}
+::-webkit-scrollbar-corner { background: transparent; }
+@supports not selector(::-webkit-scrollbar) {
+  html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--text) 25%, transparent) transparent; }
+}

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=412">
+<title>MyStuff · Home</title>
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<!-- DashboardScreen Home tab: app bar, CategoryBento, Recent, AppBottomNav. -->
+<div class="appbar">
+  <span class="wordmark">My<i>Stuff</i></span>
+  <span class="grow"></span>
+  <span class="btn40"><i data-icon="search"></i></span>
+  <span class="btn40"><i data-icon="menu"></i></span>
+</div>
+
+<div class="home">
+  <div class="title-medium" style="font-weight:700">Categories</div>
+  <div class="bento">
+    <div class="bento-top">
+      <div class="tile hero">
+        <svg class="vault" id="vault" viewBox="0 0 181 194" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="content">
+          <div class="top"><span class="name title-small">Passwords</span><i data-icon="arrow_outward" class="arrow"></i></div>
+          <span class="count">12</span>
+        </div>
+      </div>
+      <div class="bento-col">
+        <div class="tile small" style="--c:#6366f1">
+          <svg class="art" viewBox="0 0 155 92" aria-hidden="true">
+            <g transform="rotate(-12 128 82)">
+              <path d="M100 40 L146 40 L160 54 L160 120 A8 8 0 0 1 152 128 L100 128 A8 8 0 0 1 92 120 L92 48 A8 8 0 0 1 100 40 Z"/>
+              <path d="M146 40 L146 50 A4 4 0 0 0 150 54 L160 54"/>
+              <path d="M104 62 H144 M104 72 H150 M104 82 H150 M104 92 H136"/>
+            </g>
+          </svg>
+          <div class="content">
+            <div class="top"><span class="dot"></span><span class="name title-small">Notes</span><i data-icon="arrow_outward" class="arrow"></i></div>
+            <span class="count">8</span>
+          </div>
+        </div>
+        <div class="tile small" style="--c:#10b981">
+          <svg class="art" viewBox="0 0 155 92" aria-hidden="true">
+            <rect x="86" y="38" width="82" height="52" rx="9" transform="rotate(-16 127 64)"/>
+            <g transform="rotate(-6 136 76)">
+              <rect x="96" y="50" width="82" height="52" rx="9"/>
+              <rect x="106" y="62" width="15" height="12" rx="3"/>
+              <path d="M106 88 H132"/>
+              <path d="M150 62 A8 8 0 0 1 150 74 M156 58 A14 14 0 0 1 156 78 M162 54 A20 20 0 0 1 162 82"/>
+            </g>
+          </svg>
+          <div class="content">
+            <div class="top"><span class="dot"></span><span class="name title-small">Cards</span><i data-icon="arrow_outward" class="arrow"></i></div>
+            <span class="count">3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bento-row">
+      <div class="tile small" style="--c:#0ea5e9">
+        <svg class="art" id="fingerprint-art" viewBox="0 0 155 92" aria-hidden="true"></svg>
+        <div class="content">
+          <div class="top"><span class="dot"></span><span class="name title-small">Identities</span><i data-icon="arrow_outward" class="arrow"></i></div>
+          <span class="count">4</span>
+        </div>
+      </div>
+      <div class="tile small" style="--c:#64748b">
+        <svg class="art" viewBox="0 0 155 92" aria-hidden="true">
+          <rect x="112" y="30" width="52" height="68" rx="7" style="opacity:.5"/>
+          <rect x="104" y="36" width="52" height="68" rx="7" style="opacity:.75"/>
+          <path d="M102 42 L136 42 L150 56 L150 108 A7 7 0 0 1 143 115 L102 115 A7 7 0 0 1 95 108 L95 49 A7 7 0 0 1 102 42 Z"/>
+          <path d="M136 42 L136 51 A5 5 0 0 0 141 56 L150 56"/>
+          <path d="M104 66 H138 M104 76 H142 M104 86 H130"/>
+        </svg>
+        <div class="content">
+          <div class="top"><span class="dot"></span><span class="name title-small">Documents</span><i data-icon="arrow_outward" class="arrow"></i></div>
+          <span class="count">9</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head recent-head"><span class="title-medium" style="font-weight:700">Recent</span><span class="see-all">See all</span></div>
+  <div class="card">
+    <div class="recent-row"><span class="avatar" data-size="40" data-color="#2563eb">G</span><span class="text"><span class="title-small">Gmail</span><span class="body-small">Password · you@gmail.com</span></span><span class="when label-small">now</span></div>
+    <div class="recent-row"><span class="avatar" data-size="40" data-color="#10b981">H</span><span class="text"><span class="title-small">HDFC Millennia</span><span class="body-small">Card · •••• 4821</span></span><span class="when label-small">2h</span></div>
+    <div class="recent-row"><span class="avatar" data-size="40" data-color="#f59e0b">A</span><span class="text"><span class="title-small">Aadhaar</span><span class="body-small">Identity · •••• 3312</span></span><span class="when label-small">1d</span></div>
+    <div class="recent-row"><span class="avatar" data-size="40" data-color="#8b5cf6">G</span><span class="text"><span class="title-small">Goa trip plan</span><span class="body-small">Note</span></span><span class="when label-small">3d</span></div>
+  </div>
+</div>
+
+<nav class="nav">
+  <span class="pill"></span>
+  <span class="tab on"><i data-icon="home"></i><span class="label-small">Home</span></span>
+  <span class="tab"><i data-icon="folder_outlined"></i><span class="label-small">My Stuff</span></span>
+  <span class="tab"><i data-icon="star_border"></i><span class="label-small">Favourites</span></span>
+  <span class="tab"><i data-icon="settings_outlined"></i><span class="label-small">Settings</span></span>
+</nav>
+
+<script src="screens.js"></script>
+<script>
+  const NS = 'http://www.w3.org/2000/svg'
+  const el = (tag, attrs) => {
+    const node = document.createElementNS(NS, tag)
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v)
+    return node
+  }
+
+  /* _VaultArtPainter on a 181 × 194 hero tile. */
+  const vault = document.getElementById('vault')
+  const w = 181, h = 194, cx = w * 0.95, cy = h * 0.9, r = w * 0.66
+  vault.innerHTML = `<defs>
+      <linearGradient id="vg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#4f8df9"/><stop offset=".55" stop-color="#2563eb"/><stop offset="1" stop-color="#3730a3"/>
+      </linearGradient>
+      <radialGradient id="vl" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="${w * 1.1}">
+        <stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="${w}" height="${h}" fill="url(#vg)"/>
+    <rect width="${w}" height="${h}" fill="url(#vl)"/>
+    <circle cx="${cx}" cy="${cy}" r="${r * 0.5}" fill="#fff" fill-opacity=".07"/>`
+  for (const [f, a, sw] of [[1, 0.14, 1.2], [0.78, 0.1, 1.0], [0.5, 0.18, 1.4]]) {
+    vault.append(el('circle', { cx, cy, r: r * f, fill: 'none', stroke: '#fff', 'stroke-opacity': a, 'stroke-width': sw }))
+  }
+  for (let i = 0; i < 60; i++) {
+    const major = i % 5 === 0
+    const ang = (i * 2 * Math.PI) / 60
+    const from = r * (major ? 0.83 : 0.87), to = r * 0.94
+    vault.append(el('line', {
+      x1: cx + Math.cos(ang) * from, y1: cy + Math.sin(ang) * from,
+      x2: cx + Math.cos(ang) * to, y2: cy + Math.sin(ang) * to,
+      stroke: '#fff', 'stroke-opacity': major ? 0.32 : 0.14, 'stroke-width': major ? 1.6 : 1.0,
+    }))
+  }
+  vault.append(el('circle', { cx, cy: cy - r * 0.64, r: 3.5, fill: '#fff', 'fill-opacity': 0.55 }))
+
+  /* _TileArtPainter._fingerprint: broken half-rings around (132, 100). */
+  const fp = document.getElementById('fingerprint-art')
+  const gaps = [[[0, 1]], [[0, 0.4], [0.47, 1]], [[0, 0.3], [0.38, 0.75]]]
+  for (let i = 0; i < 7; i++) {
+    const rad = 10 + i * 8
+    for (const [from, to] of gaps[i % 3]) {
+      const a1 = Math.PI + from * Math.PI, a2 = Math.PI + to * Math.PI
+      const p = (a) => `${132 + rad * Math.cos(a)} ${100 + rad * Math.sin(a)}`
+      fp.append(el('path', { d: `M${p(a1)} A${rad} ${rad} 0 0 1 ${p(a2)}`, style: 'stroke-width:1.5' }))
+    }
+  }
+</script>
+</body>
+</html>

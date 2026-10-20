@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=412">
+<title>MyStuff · Unlock</title>
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<!-- UnlockScreen → PinEntryView(showLogo) + PinKeypad with the fingerprint key. -->
+<div class="unlock">
+  <div class="appbar"><span class="wordmark">My<i>Stuff</i></span></div>
+  <div class="prompt">
+    <h1>Enter your PIN</h1>
+    <p>Unlock MyStuff to continue</p>
+    <div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+  <div class="keypad">
+    <div class="keyrow"><span class="key digit">1</span><span class="key digit">2</span><span class="key digit">3</span></div>
+    <div class="keyrow"><span class="key digit">4</span><span class="key digit">5</span><span class="key digit">6</span></div>
+    <div class="keyrow"><span class="key digit">7</span><span class="key digit">8</span><span class="key digit">9</span></div>
+    <div class="keyrow">
+      <span class="key icon"><i data-icon="fingerprint"></i></span>
+      <span class="key digit">0</span>
+      <span class="key icon"><i data-icon="backspace_outlined"></i></span>
+    </div>
+  </div>
+</div>
+<script src="screens.js"></script>
+</body>
+</html>
