@@ -46,9 +46,22 @@ function Hero() {
     <section className="hero">
       <div className="hero-inner">
         <h1>
-          {site.hero.headline.split('\n').map((line) => (
-            <span key={line}>{line}</span>
-          ))}
+          {site.hero.headline.split('\n').map((line) => {
+            const [before, after] = line.split(site.hero.highlight)
+            return (
+              <span key={line}>
+                {after === undefined ? (
+                  line
+                ) : (
+                  <>
+                    {before}
+                    <span className="hero-hl">{site.hero.highlight}</span>
+                    {after}
+                  </>
+                )}
+              </span>
+            )
+          })}
         </h1>
         <p className="hero-sub">{site.hero.sub}</p>
         <DownloadButtons short />

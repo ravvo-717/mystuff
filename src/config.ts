@@ -17,7 +17,9 @@ export const site = {
   },
 
   hero: {
-    headline: 'Everything important.\nLocked on your phone.',
+    headline: 'All your stuff\nSafe in your pocket',
+    /** The one word in the headline drawn in the brand gradient. */
+    highlight: 'pocket',
     sub: 'A private vault for passwords, notes, cards, IDs and documents. Free, with no ads and no tracking.',
     primary: 'Download for Android',
     secondary: 'Get it on itch.io',
@@ -25,7 +27,7 @@ export const site = {
     primaryShort: 'Download',
     secondaryShort: 'Get on itch.io',
     note: 'Free · optional Google Drive backup',
-    notePhone: 'Free for Android 6 or newer',
+    notePhone: 'Free for Android 7 or newer',
     /** App screens rebuilt in public/screens/<name>.html, left to right. */
     screens: [
       { screen: 'unlock', alt: 'MyStuff unlock screen with PIN pad and fingerprint' },
@@ -50,13 +52,13 @@ export const site = {
         title: 'Locked with AES-256',
         /** Illustration only: what a stored item looks like to anyone without your PIN. */
         cipher: 'A6SNuiVwwiro0PXtsDrd7zHg7spk66XV1VJTbS7ju4DRjgaM6DXWq7gKZSXbVin06d3oohgs==',
-        line: 'Without your PIN, this is all anyone gets.',
+        line: 'Without unlocking MyStuff, this is all anyone sees.',
       },
       backup: {
         tag: 'Backup',
         title: 'Your Google Drive',
-        file: 'mystuff_vault.enc',
-        fileNote: 'Hidden and locked',
+        file: 'mystuff_vault.msb',
+        fileNote: 'Encrypted, in a hidden app folder',
         none: 'No Ravvo servers.',
       },
     },
@@ -84,7 +86,7 @@ export const site = {
         big: true,
         short: 'Yes',
         q: 'Is my data safe?',
-        a: 'It is locked on your phone with AES-256. Only your PIN or fingerprint opens it. Your backup is locked the same way.',
+        a: 'It is locked on your phone with AES-256. Only your PIN or fingerprint opens it. Your backup is encrypted too, and only your Google account can restore it.',
       },
       {
         icon: 'phone',
@@ -111,9 +113,9 @@ export const site = {
         a: 'Go to Settings → Sign out and turn on "Also delete my Google Drive backup".',
       },
       {
-        icon: 'store',
-        q: "Why isn't it on the Play Store?",
-        a: 'Sharing it directly keeps it free. It is the same app, with the same updates.',
+        icon: 'download',
+        q: 'How do I update MyStuff?',
+        a: 'Download the new version from this site and install it. Your data stays on your phone.',
       },
     ] as { icon: IconName; big?: boolean; short?: string; q: string; a: string }[],
   },
@@ -123,7 +125,7 @@ export const site = {
     eyebrow: 'Free for Android',
     title: 'Get it on\nyour phone',
     sub: 'No ads, no account. About a minute.',
-    meta: 'Version 1.0.0 · Android 6 or newer',
+    meta: 'Version 1.0.0 · Android 7 or newer',
     card: { title: 'Get started', sub: 'MyStuff by Ravvo' },
     /** `done` shows the step ticked. */
     steps: [
@@ -134,68 +136,77 @@ export const site = {
   },
 
   /** The privacy policy (privacy.html). Checked against what the app does;
-   *  change `updated` whenever the text changes. Emails and https:// links
-   *  in the text become links. */
+   *  change `updated` whenever the text changes. Emails, https:// links and
+   *  [label](https://...) in the text become links. */
   privacy: {
-    title: 'Your stuff stays yours.',
-    sub: 'MyStuff has no servers and no accounts. This is exactly what happens to your data.',
-    updated: '20 October 2026',
+    title: 'Privacy policy',
+    intro: 'MyStuff has no servers and no accounts. Your data stays with you.',
+    updated: '21 October 2026',
     sections: [
-      {
-        id: 'who',
-        title: 'Who we are',
-        blocks: [{ p: 'MyStuff is made by Ravvo. For any question about this policy, write to team.ravvo@gmail.com.' }],
-      },
+      { id: 'who', title: 'Who we are', blocks: [{ p: 'MyStuff is made by Ravvo. Questions: team.ravvo@gmail.com' }] },
       {
         id: 'phone',
-        title: 'What stays on your phone',
+        title: 'On your phone',
         blocks: [
-          { p: 'Everything you save in MyStuff: passwords, notes, cards, IDs and documents.' },
           {
             list: [
-              'It is encrypted with AES-256 before it is stored.',
-              'Your PIN unlocks it and never leaves your phone.',
-              'Fingerprint unlock is handled by Android. MyStuff never sees your fingerprint.',
-              'Files you add are copied into the encrypted vault. MyStuff only sees the files you choose.',
+              'Everything you save is encrypted with AES-256.',
+              'Your PIN never leaves your phone.',
+              'Fingerprint unlock is done by Android. We never see it.',
+              'MyStuff only sees the files you choose.',
+              'A copied password stays in the clipboard until you copy something else.',
             ],
           },
         ],
       },
       {
-        id: 'google',
-        title: 'Google sign-in and backup',
+        id: 'backup',
+        title: 'Google backup',
         blocks: [
-          { p: 'Backup is optional. If you turn it on, you sign in with Google and MyStuff receives:' },
+          { p: 'Backup is optional. If you turn it on:' },
           {
             list: [
-              'Your name and email address, to show which account is linked. Only the email is saved, on your phone.',
-              'Access to a private app folder in your Google Drive (drive.appdata). MyStuff cannot see any other files in your Drive.',
+              'MyStuff gets your name and email. It saves your email and Google account ID on your phone.',
+              "It can only use a private MyStuff folder in your Drive. It can't see your other files.",
+              'Your encrypted vault and its key are saved in that folder.',
+              'Backups go straight to your Drive, never to Ravvo.',
             ],
           },
-          { p: 'The backup is a single encrypted file. It goes directly from your phone to your Drive and is never sent to Ravvo.' },
+          {
+            p: "Anyone who can sign in to your Google account can restore your backup. Turn on 2-Step Verification. [Google's privacy policy](https://policies.google.com/privacy) also applies.",
+          },
         ],
       },
       {
         id: 'google-data',
-        title: 'How we use Google data',
+        title: 'Google data',
         blocks: [
           {
             quote:
               "MyStuff's use and transfer of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements.",
           },
-          { p: 'It is used only to store and restore your backup. It is not transferred to anyone, used for advertising, or used to train AI models.' },
+          { p: 'We use it only for your backup. We never share it, use it for ads, or use it to train AI.' },
+        ],
+      },
+      {
+        id: 'online',
+        title: 'When MyStuff goes online',
+        blocks: [
+          {
+            p: 'Only to sign in with Google, and to back up or restore. Links you tap open in your browser. Without Google, MyStuff works offline.',
+          },
         ],
       },
       {
         id: 'never',
-        title: 'What we never do',
+        title: 'We never',
         blocks: [
           {
             list: [
-              'Run servers that receive your data.',
-              'Show ads, or use analytics or tracking.',
+              'Run servers that get your data.',
+              'Show ads, or use analytics, tracking or crash reports.',
               'Sell or share your data.',
-              'Ask you to create an account.',
+              'Ask you to make an account.',
             ],
           },
         ],
@@ -203,25 +214,27 @@ export const site = {
       {
         id: 'permissions',
         title: 'Permissions',
+        blocks: [{ list: ['Internet: for Google Drive backup.', 'Biometrics: for fingerprint unlock, if you turn it on.'] }],
+      },
+      {
+        id: 'pin',
+        title: 'Forgot your PIN?',
         blocks: [
           {
-            list: [
-              'Internet: only to reach Google Drive for your backup.',
-              'Biometrics: to unlock MyStuff with your fingerprint, if you turn it on.',
-            ],
+            p: "It can't be reset. Reinstall MyStuff and sign in with the same Google account to restore your backup. Without a backup, your data is lost.",
           },
         ],
       },
       {
         id: 'delete',
-        title: 'Keeping and deleting your data',
+        title: 'Deleting your data',
         blocks: [
-          { p: 'Your data is kept on your phone, and in your Drive backup if you turn it on, until you delete it.' },
+          { p: 'Your data stays until you delete it.' },
           {
             list: [
-              'In the app, go to Settings → Sign out and turn on "Also delete my Google Drive backup".',
-              'Uninstalling MyStuff removes everything stored on your phone.',
-              "You can remove MyStuff's access to your Google account at any time at https://myaccount.google.com/permissions.",
+              'Settings → Sign out, and turn on "Also delete my Google Drive backup".',
+              'Uninstalling MyStuff deletes everything on your phone.',
+              'Remove Google access any time at https://myaccount.google.com/permissions',
             ],
           },
         ],
@@ -230,20 +243,13 @@ export const site = {
         id: 'website',
         title: 'This website',
         blocks: [
-          { p: 'This site uses no cookies and no analytics, and loads nothing from other services. Your light or dark choice is saved in your browser only.' },
-          { p: 'It is hosted on GitHub Pages, which may keep standard server logs. Downloads come from GitHub or itch.io, under their own privacy policies.' },
+          {
+            p: 'No cookies, no analytics. Your theme choice is saved in your browser only. The site is hosted on GitHub Pages, which may keep server logs.',
+          },
         ],
       },
-      {
-        id: 'children',
-        title: 'Children',
-        blocks: [{ p: 'MyStuff is not directed at children under 13. We do not collect personal data from anyone.' }],
-      },
-      {
-        id: 'changes',
-        title: 'Changes to this policy',
-        blocks: [{ p: 'If this policy changes, we will update this page and the date at the top.' }],
-      },
+      { id: 'children', title: 'Children', blocks: [{ p: 'MyStuff is not for children under 13.' }] },
+      { id: 'changes', title: 'Changes', blocks: [{ p: "If this policy changes, we'll update this page and the date." }] },
     ] as { id: string; title: string; blocks: ({ p: string } | { list: string[] } | { quote: string })[] }[],
   },
 }

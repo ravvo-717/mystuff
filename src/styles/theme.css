@@ -50,12 +50,13 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+/* The page colour sits on <html> (the pages also set it inline, so nothing flashes
+   while loading). The body stays transparent so the Aurora layer below shows. */
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; background: var(--bg); }
 
 body {
   position: relative;
   margin: 0;
-  background: var(--bg);
   color: var(--text);
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   line-height: 1.55;
@@ -108,7 +109,8 @@ a { color: var(--accent); }
 /* The menu sheet stays solid while open, so it never mixes with the page. */
 .header.open { background: var(--bg); border-bottom-color: var(--line); backdrop-filter: none; -webkit-backdrop-filter: none; }
 /* Header icon buttons (theme switch, phone menu): a bare line icon with a
-   full 44px tap area and a soft highlight on hover. */
+   full 44px tap area. The hover highlight is only for a real mouse; on a
+   touch screen it would stick after a tap and show as a box. */
 .icon-btn {
   display: grid;
   place-items: center;
@@ -121,8 +123,11 @@ a { color: var(--accent); }
   color: var(--text);
   cursor: pointer;
   transition: background 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.icon-btn:hover { background: color-mix(in srgb, var(--text) 8%, transparent); }
+@media (hover: hover) {
+  .icon-btn:hover { background: color-mix(in srgb, var(--text) 8%, transparent); }
+}
 .icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .footer { border-top: 1px solid var(--line); margin-top: 72px; }
@@ -209,15 +214,15 @@ a { color: var(--accent); }
   line-height: 1.08;
   letter-spacing: -1.2px;
 }
-.hero-inner h1 span { display: block; }
-.hero-inner h1 span + span {
+.hero-inner h1 > span { display: block; }
+/* The one highlighted word (site.hero.highlight) in the brand gradient. */
+.hero-hl {
   background: linear-gradient(100deg, #8a5cff, #3f7bff 55%, #22c3c9);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   /* Room for descenders (y, p): the clipped gradient stops at the line box. */
   padding-bottom: 0.14em;
-  margin-bottom: -0.14em;
 }
 .hero-sub { margin: 0 auto 26px; color: var(--muted); font-size: 17px; max-width: 46ch; }
 .hero-inner .actions { justify-content: center; }
@@ -598,12 +603,13 @@ a { color: var(--accent); }
   .big3, .big3-more { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* ---------- Privacy page ---------- */
+/* ---------- Privacy page ----------
+   Wide screens: a contents list beside the text. Phones: a plain document. */
 .policy { max-width: 1060px; margin: 0 auto; padding: 56px 20px 0; }
-.policy-head { max-width: 680px; margin-bottom: 52px; }
+.policy-head { max-width: 680px; margin-bottom: 48px; }
 .policy-head h1 { margin: 0 0 10px; font-size: clamp(32px, 5vw, 46px); font-weight: 800; letter-spacing: -1px; line-height: 1.08; }
-.policy-sub { margin: 0 0 14px; color: var(--muted); font-size: 16.5px; }
-.policy-updated { color: var(--muted); font-size: 13.5px; }
+.policy-intro { margin: 0 0 12px; color: var(--muted); font-size: 16.5px; }
+.policy-updated { margin: 0; color: var(--muted); font-size: 13.5px; }
 
 .policy-body { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 56px; align-items: start; }
 .policy-toc { position: sticky; top: 96px; display: grid; gap: 2px; }
@@ -612,17 +618,15 @@ a { color: var(--accent); }
 .policy-toc a:hover { color: var(--text); }
 .policy-toc a.on { color: var(--text); border-left-color: var(--accent); }
 
-.policy-section { max-width: 720px; padding: 28px 0; border-top: 1px solid var(--line); scroll-margin-top: 88px; }
+.policy-section { max-width: 680px; padding: 26px 0; border-top: 1px solid var(--line); scroll-margin-top: 88px; color: color-mix(in srgb, var(--text) 78%, var(--bg)); font-size: 15.5px; line-height: 1.7; }
 .policy-section:first-child { padding-top: 0; border-top: 0; }
-.policy-section h2 { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; font-size: 19px; font-weight: 800; }
-.policy-no { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); font-size: 12px; font-weight: 800; }
-.policy-section p { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
-.policy-section ul { display: grid; gap: 8px; margin: 4px 0 10px; padding: 0; list-style: none; }
-.policy-section li { position: relative; padding-left: 22px; color: var(--muted); font-size: 15px; }
-.policy-section li::before { content: ''; position: absolute; left: 5px; top: 0.68em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-.policy-section a { font-weight: 600; text-decoration: none; }
-.policy-section a:hover { text-decoration: underline; }
-.policy-section blockquote { margin: 4px 0 12px; padding: 14px 18px; border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; background: var(--raised); font-size: 14.5px; }
+.policy-section h2 { margin: 0 0 8px; color: var(--text); font-size: 19px; line-height: 1.35; font-weight: 700; letter-spacing: -0.2px; }
+.policy-section p { margin: 0 0 10px; }
+.policy-section ul { margin: 0 0 10px; padding-left: 22px; }
+.policy-section li { margin: 0 0 6px; padding-left: 2px; }
+.policy-section li::marker { color: var(--muted); }
+.policy-section a { text-decoration: underline; text-underline-offset: 2px; }
+.policy-section blockquote { margin: 4px 0 12px; padding: 2px 0 2px 16px; border-left: 3px solid var(--line); font-style: italic; }
 @media (max-width: 860px) {
   .policy-body { grid-template-columns: minmax(0, 1fr); }
   .policy-toc { display: none; }
@@ -643,7 +647,7 @@ a { color: var(--accent); }
 @media (max-width: 640px) {
   .desktop-only { display: none !important; }
 
-  /* Header: MyStuff large, "by RAVVO" small, and a menu button. */
+  /* Header: MyStuff large, "by RAVVO" small, then the theme and menu icons. */
   .header { height: 68px; padding: 0 16px 0 20px; }
   .header-logo { gap: 7px; }
   .logo-ms { height: 24px; width: auto; }
@@ -667,26 +671,17 @@ a { color: var(--accent); }
   }
   .phone-menu[hidden] { display: none; }
   .phone-menu nav { display: grid; }
+  /* Plain text links to the other pages, one per line. */
   .phone-menu nav a {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 4px;
+    display: block;
+    padding: 14px 4px;
     border-bottom: 1px solid var(--line);
     color: var(--text);
-    font-size: var(--mobile-body);
+    font-size: 15px;
     font-weight: 600;
     text-decoration: none;
   }
-  .phone-menu nav a svg { flex: none; color: var(--muted); }
-  .phone-menu nav a svg:last-child { margin-left: auto; }
-  .phone-menu nav a.here, .phone-menu nav a.here svg { color: var(--accent); }
-  .menu-theme { display: flex; align-items: center; gap: 12px; padding: 13px 4px; font-size: var(--mobile-body); font-weight: 600; }
-  .menu-theme svg { flex: none; color: var(--muted); }
-  .seg { display: inline-flex; margin-left: auto; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); }
-  .seg button { padding: 5px 12px; border: 0; border-radius: 999px; background: none; color: var(--muted); font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
-  .seg button.on { background: var(--text); color: var(--bg); }
-  .menu-download { width: 100%; margin-top: 4px; }
+  .menu-download { width: 100%; margin-top: 16px; }
   .menu-shade { display: block; position: fixed; inset: 68px 0 0; z-index: 40; background: rgba(0, 0, 0, 0.45); animation: shade-in 0.2s ease; }
   .phone-menu a:focus-visible, .phone-menu button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -805,21 +800,15 @@ a { color: var(--accent); }
   .big3-icon { grid-row: span 2; width: 32px; height: 32px; }
   .big3-icon svg { width: 17px; height: 17px; }
   .big3-small p { font-size: 12.5px; line-height: 1.45; }
-  .getit-actions { display: grid; margin: 18px 0 0; }
+  .getit-actions { display: grid; justify-content: stretch; margin: 18px 0 0; }
 
-  /* Privacy policy */
+  /* Privacy policy: a plain document */
   .policy { padding: 30px 20px 0; }
-  .policy-head { margin: 0 auto 28px; text-align: center; }
-  .policy-head h1 { margin: 0 0 8px; font-size: var(--mobile-h1); line-height: 1.25; letter-spacing: -0.4px; }
-  .policy-sub { margin: 0 auto 10px; max-width: 34ch; font-size: var(--mobile-body); }
-  .policy-updated { font-size: var(--mobile-small); }
-  .policy-section { padding: 22px 0; scroll-margin-top: 72px; }
-  .policy-section h2 { gap: 10px; margin: 0 0 8px; font-size: 16px; line-height: 1.3; }
-  .policy-no { width: 24px; height: 24px; font-size: 11px; }
-  .policy-section p, .policy-section li { font-size: var(--mobile-body); }
-  .policy-section li { padding-left: 20px; }
-  .policy-section li::before { left: 4px; }
-  .policy-section blockquote { padding: 12px 14px; font-size: 13px; }
+  .policy-head { margin-bottom: 26px; }
+  .policy-head h1 { margin-bottom: 6px; font-size: 26px; line-height: 1.2; letter-spacing: -0.6px; }
+  .policy-intro { font-size: 15px; }
+  .policy-section { padding: 22px 0 0; border-top: 0; font-size: 15px; }
+  .policy-section h2 { font-size: 18px; }
 }
 
 @keyframes menu-in { from { opacity: 0; transform: translateY(-8px); } }

@@ -5,18 +5,17 @@ import { site } from '../config'
 const policy = site.privacy
 const sectionIds = policy.sections.map((s) => s.id)
 
-/** The privacy policy: a contents list that stays beside you on wide screens,
- *  marking the section you are reading. */
+/** The privacy policy. On wide screens a contents list stays beside you,
+ *  marking the section you are reading; on phones it is a plain document. */
 export function Privacy() {
   const active = useActiveSection(sectionIds)
   return (
     <Layout>
       <div className="policy">
         <header className="policy-head">
-          <span className="eyebrow">Privacy policy</span>
           <h1>{policy.title}</h1>
-          <p className="policy-sub">{policy.sub}</p>
-          <small className="policy-updated">Last updated {policy.updated}</small>
+          <p className="policy-intro">{policy.intro}</p>
+          <p className="policy-updated">Last updated {policy.updated}</p>
         </header>
 
         <div className="policy-body">
@@ -29,13 +28,10 @@ export function Privacy() {
             ))}
           </nav>
 
-          <div>
-            {policy.sections.map((s, i) => (
+          <article>
+            {policy.sections.map((s) => (
               <section key={s.id} id={s.id} className="policy-section">
-                <h2>
-                  <span className="policy-no">{i + 1}</span>
-                  {s.title}
-                </h2>
+                <h2>{s.title}</h2>
                 {s.blocks.map((block, j) =>
                   'p' in block ? (
                     <p key={j}>{linkify(block.p)}</p>
@@ -51,7 +47,7 @@ export function Privacy() {
                 )}
               </section>
             ))}
-          </div>
+          </article>
         </div>
       </div>
     </Layout>
@@ -79,9 +75,17 @@ function useActiveSection(ids: string[]) {
   return active
 }
 
-/** Turns emails and https:// links in policy text into links. */
+/** Turns [label](https://...), emails and bare https:// links in policy text into links. */
 function linkify(text: string) {
-  return text.split(/(\S+@\S+\.[a-z]+|https:\/\/[^\s]+?)(?=[.,]?(?:\s|$))/).map((part, i) => {
+  return text.split(/(\[[^\]]+\]\(https:\/\/[^)]+\)|(?:\S+@\S+\.[a-z]+|https:\/\/[^\s]+?)(?=[.,]?(?:\s|$)))/).map((part, i) => {
+    const labelled = part.match(/^\[([^\]]+)\]\((https:\/\/[^)]+)\)$/)
+    if (labelled) {
+      return (
+        <a key={i} href={labelled[2]} target="_blank" rel="noreferrer">
+          {labelled[1]}
+        </a>
+      )
+    }
     if (part.startsWith('https://')) {
       return (
         <a key={i} href={part} target="_blank" rel="noreferrer">

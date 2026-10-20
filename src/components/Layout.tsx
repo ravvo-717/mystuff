@@ -2,17 +2,17 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { site } from '../config'
 import { useReveal } from '../hooks/useReveal'
 import { useTheme } from '../hooks/useTheme'
-import { Icon, type IconName } from './Icon'
+import { Icon } from './Icon'
 
 const base = import.meta.env.BASE_URL
 const year = new Date().getFullYear()
 
-/** The pages in the phone menu; `match` picks out the current one. */
-const PAGES: { label: string; href: string; icon: IconName; match: (path: string) => boolean }[] = [
-  { label: 'Home', href: base, icon: 'home', match: (p) => !/(learn|privacy)\.html$/.test(p) },
-  { label: 'How it works', href: `${base}learn.html`, icon: 'help', match: (p) => p.endsWith('learn.html') },
-  { label: 'Privacy policy', href: `${base}privacy.html`, icon: 'shield', match: (p) => p.endsWith('privacy.html') },
+/** The other pages in the phone menu; Home is shown on every page but itself. */
+const PAGES = [
+  { label: 'How it works', file: 'learn.html' },
+  { label: 'Privacy policy', file: 'privacy.html' },
 ]
+const isHome = (path: string) => !PAGES.some((page) => path.endsWith(page.file))
 
 /** The sticky header, footer and theme handling every page shares. */
 export function Layout({ children }: { children: ReactNode }) {
@@ -53,7 +53,7 @@ export function Layout({ children }: { children: ReactNode }) {
           aria-label={`${site.appName} by ${site.brand}`}
           onClick={(e) => {
             // Already home: scroll up instead of reloading the page.
-            if (!PAGES[0].match(path)) return
+            if (!isHome(path)) return
             e.preventDefault()
             setMenuOpen(false)
             window.scrollTo({ top: 0 })
@@ -88,7 +88,7 @@ export function Layout({ children }: { children: ReactNode }) {
           </span>
         </a>
         <span className="grow" />
-        <button type="button" className="icon-btn desktop-only" onClick={toggle} aria-label="Switch theme">
+        <button type="button" className="icon-btn" onClick={toggle} aria-label="Switch theme">
           <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={18} />
         </button>
         <a className="btn small desktop-only" href={site.links.download}>
@@ -108,34 +108,14 @@ export function Layout({ children }: { children: ReactNode }) {
 
         <div id="phone-menu" className="phone-menu" hidden={!menuOpen}>
           <nav aria-label="Pages">
-            {PAGES.map((page) => {
-              const here = page.match(path)
-              return (
-                <a key={page.label} href={page.href} className={here ? 'here' : undefined} aria-current={here ? 'page' : undefined}>
-                  <Icon name={page.icon} size={19} />
-                  {page.label}
-                  <Icon name="chevron" size={16} />
-                </a>
-              )
-            })}
-            <a href={site.links.github}>
-              <Icon name="github" size={19} />
-              GitHub
-              <Icon name="chevron" size={16} />
-            </a>
+            {/* Only the other pages: the one you're on is left out. */}
+            {!isHome(path) && <a href={base}>Home</a>}
+            {PAGES.filter((page) => !path.endsWith(page.file)).map((page) => (
+              <a key={page.label} href={base + page.file}>
+                {page.label}
+              </a>
+            ))}
           </nav>
-          <div className="menu-theme">
-            <Icon name="sun" size={19} />
-            Theme
-            <span className="seg" role="group" aria-label="Theme">
-              <button type="button" className={theme === 'dark' ? 'on' : undefined} aria-pressed={theme === 'dark'} onClick={() => theme !== 'dark' && toggle()}>
-                Dark
-              </button>
-              <button type="button" className={theme === 'light' ? 'on' : undefined} aria-pressed={theme === 'light'} onClick={() => theme !== 'light' && toggle()}>
-                Light
-              </button>
-            </span>
-          </div>
           <a className="btn primary menu-download" href={site.links.download}>
             <Icon name="download" size={18} />
             {site.hero.primary}
